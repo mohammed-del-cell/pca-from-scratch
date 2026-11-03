@@ -1,9 +1,7 @@
-import numpy as np 
+import numpy as np
 
 
-class PCA():
-
-
+class PCA:
     def __init__(self, n_components):
         self.n_components = n_components
         self.mean_ = None
@@ -11,17 +9,16 @@ class PCA():
         self.explained_variance_ = None
         self.explained_variance_ratio_ = None
 
-
-    def fit(self, X): 
+    def fit(self, X):
         # 1. center the data
-        self.mean_ = X.mean(axis=0)  
-        X_centered = X - self.mean_ 
+        self.mean_ = X.mean(axis=0)
+        X_centered = X - self.mean_
 
         # 2. covariance matrix
         m = X.shape[0]
-        cov = (X_centered.T @ X_centered) / (m-1)
+        cov = (X_centered.T @ X_centered) / (m - 1)
 
-         # 3. eigenvectors and eigenvalues
+        # 3. eigenvectors and eigenvalues
         eigenvalues, eigenvectors = np.linalg.eigh(cov)
 
         # 4. sort from largest to smallest eigenvalue
@@ -34,18 +31,13 @@ class PCA():
         self.components_ = eigenvectors[:, :self.n_components]
         self.explained_variance_ = eigenvalues[:self.n_components]
         self.explained_variance_ratio_ = self.explained_variance_ / total
-
         return self
 
-    
     def transform(self, X):
-            X_centered = X - self.mean_
-            return X_centered @ self.components_
+        return (X - self.mean_) @ self.components_
 
-    
-    def inverse_transform(self, y):
-         return y @ self.components_.T + self.mean_     
-
+    def inverse_transform(self, Y):
+        return Y @ self.components_.T + self.mean_
 
     def fit_transform(self, X):
-         return self.fit(X).transform(X)
+        return self.fit(X).transform(X)

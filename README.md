@@ -25,7 +25,6 @@ I implemented Principal Component Analysis (PCA) with NumPy, checked it against 
 ### How many components keep how much variance?
 Each added component adds more variance, but the eigenvalues are sorted from largest to smallest, so the last components add very little information. 21 components keep 90% of the variance, and 29 keep 95%.
 
-21 components keep 90% of the variance, and 29 keep 95%.
 
 ![explained variance](images/explained_variance.png)
 
@@ -41,24 +40,24 @@ Logistic regression on the PCA features, 5-fold stratified cross-validation on t
 
 | Features | Mean accuracy | Std |
 |---|---|---|
-| All 64 pixels (no PCA) | 0.962 | 0.012 |
-| k = 2 | 0.618 | 0.012 |
-| k = 5 | 0.852 | 0.018 |
-| k = 10 | 0.925 | 0.012 |
-| k = 21 | 0.945 | 0.014 |
-| k = 29 | 0.955 | 0.008 |
-| k = 40 | 0.963 | 0.010 |
-| k = 64 | 0.965 | 0.008 |
+| All 64 pixels (no PCA) | 0.960 | 0.010 |
+| k = 2 | 0.598 | 0.010 |
+| k = 5 | 0.856 | 0.021 |
+| k = 10 | 0.922 | 0.010 |
+| k = 21 | 0.944 | 0.016 |
+| k = 29 | 0.952 | 0.009 |
+| k = 40 | 0.961 | 0.009 |
+| k = 64 | 0.961 | 0.011 |
 
 ![accuracy vs k](images/accuracy_vs_k.png)
 
 I chose **k = 29**, the smallest k whose mean accuracy is within one standard deviation of the no-PCA baseline (k = 21 is clearly below it). It also keeps 95% of the variance.
 
-**Final check on the test set (k = 29):** accuracy 0.958, the same as the model without PCA (0.958).
+**Final check on the test set:** no PCA scores 0.958 and k = 29 scores 0.953. The gap is about 2 images out of 360, which is within noise.
 
 ## Conclusion
 
-On this dataset, 29 PCA components (instead of 64 pixels) give the same accuracy as using all pixels. PCA did **not improve** accuracy. It gave the same accuracy with fewer than half of the features.
+On this dataset, 29 PCA components (instead of 64 pixels) give nearly the same accuracy as using all pixels: about 0.8 points lower in cross-validation (within one standard deviation) and 0.5 points lower on the test set. PCA did **not improve** accuracy. It kept almost the same accuracy with fewer than half of the features.
 
 ## Limitations
 
@@ -66,7 +65,6 @@ On this dataset, 29 PCA components (instead of 64 pixels) give the same accuracy
 - The test set has 360 images, so one image is about 0.28% accuracy. Differences of one point are within noise.
 - The pixels were not standardized, and I only tested one classifier (logistic regression).
 - PCA is linear and ignores the labels, so high variance does not always mean useful for the prediction. Here the two agree, but that is not guaranteed on other data.
-- The first accuracy table (before cross-validation) used test scores for several values of k, so it was exploratory. k was chosen from the cross-validation results.
 
 ## Project structure
 
